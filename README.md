@@ -23,3 +23,8 @@ node tests.js
 Current automated tests cover QRH grid values, interpolation, IAS wind correction, GS logic, taxi-energy addition, unavailable MAX cells, and zone thresholds.
 
 > Advisory tool only. Verify calculations against the current company QRH and procedures before operational use.
+
+
+## UI note
+
+This build replaces the previous silhouette with a blended hero image of a front-view 737 MAX on a wet runway.

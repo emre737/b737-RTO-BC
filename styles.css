@@ -48,7 +48,7 @@ button { -webkit-tap-highlight-color: transparent; }
 
 .app-header {
   position: relative;
-  min-height: 188px;
+  min-height: 265px;
   display: grid;
   grid-template-columns: 42px 1fr 42px;
   align-items: start;
@@ -56,7 +56,12 @@ button { -webkit-tap-highlight-color: transparent; }
   overflow: hidden;
 }
 
-.title-block { text-align: center; position: relative; z-index: 2; }
+.title-block {
+  text-align: center;
+  position: relative;
+  z-index: 2;
+  padding-top: 4px;
+}
 .eyebrow {
   font-size: 12px;
   font-weight: 700;
@@ -102,20 +107,43 @@ button { -webkit-tap-highlight-color: transparent; }
   z-index: 3;
 }
 
-.aircraft-watermark {
+.hero-plane {
   position: absolute;
-  inset: 50px -62px 0 -62px;
-  color: #9ab6d1;
+  inset: 48px -18px 0 -18px;
+  border-radius: 26px;
+  overflow: hidden;
   pointer-events: none;
-  filter: drop-shadow(0 8px 18px rgba(0, 0, 0, .13));
+  z-index: 1;
+  opacity: .98;
+  box-shadow: inset 0 -18px 40px rgba(4, 12, 22, .55);
 }
-.aircraft-watermark svg { width: 100%; height: 100%; overflow: visible; }
-.aircraft-watermark .plane-outline { stroke-width: 1.55; opacity: .92; vector-effect: non-scaling-stroke; }
-.aircraft-watermark .plane-outline .major { stroke-width: 2.15; }
-.aircraft-watermark .plane-windows { opacity: .24; }
-.aircraft-watermark .plane-max { display: none; }
-.app-shell[data-aircraft="MAX"] .aircraft-watermark .plane-ng { display: none; }
-.app-shell[data-aircraft="MAX"] .aircraft-watermark .plane-max { display: inline; }
+.hero-plane::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(5,16,29,.12) 0%, rgba(5,16,29,.12) 18%, rgba(5,16,29,.38) 60%, rgba(5,16,29,.75) 100%),
+    radial-gradient(circle at 50% 8%, rgba(87, 146, 210, .14), transparent 42%),
+    linear-gradient(90deg, rgba(6,17,30,.92) 0%, rgba(6,17,30,.22) 16%, rgba(6,17,30,.18) 84%, rgba(6,17,30,.92) 100%);
+  z-index: 2;
+}
+.hero-plane::after {
+  content: "";
+  position: absolute;
+  inset: auto 0 0;
+  height: 88px;
+  background: linear-gradient(180deg, rgba(6,17,30,0) 0%, rgba(6,17,30,.9) 100%);
+  z-index: 3;
+}
+.hero-plane img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 42%;
+  display: block;
+  filter: saturate(.84) brightness(.64) contrast(1.02);
+  transform: scale(1.03);
+}
 
 .section-label {
   display: block;
@@ -340,7 +368,7 @@ button { -webkit-tap-highlight-color: transparent; }
 
 @media (max-width: 390px) {
   .app-shell { padding-left: 14px; padding-right: 14px; }
-  .app-header { min-height: 170px; }
+  .app-header { min-height: 228px; }
   .input-card { min-height: 94px; padding-left: 12px; padding-right: 12px; }
   .result-main { grid-template-columns: 1fr; gap: 12px; }
   .status-block { border-left: 0; border-top: 1px solid var(--border); padding: 12px 0 0; }

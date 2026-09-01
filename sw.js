@@ -1,4 +1,4 @@
-const CACHE = 'b737-rto-v1.0.2';
+const CACHE = 'b737-rto-v1.1.0';
 const ASSETS = [
   './',
   './index.html',
@@ -8,7 +8,8 @@ const ASSETS = [
   './app.js',
   './manifest.webmanifest',
   './icon-192.png',
-  './icon-512.png'
+  './icon-512.png',
+  './hero-plane-max.png'
 ];
 
 self.addEventListener('install', (event) => {
