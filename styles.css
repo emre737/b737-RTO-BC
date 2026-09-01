@@ -109,10 +109,10 @@ button { -webkit-tap-highlight-color: transparent; }
   pointer-events: none;
   filter: drop-shadow(0 8px 18px rgba(0, 0, 0, .13));
 }
-.aircraft-watermark svg { width: 100%; height: 100%; }
-.aircraft-watermark .plane-fill { fill: currentColor; opacity: .16; }
-.aircraft-watermark .rear-engine { opacity: .72; }
-.aircraft-watermark .plane-detail { stroke-width: 1.8; opacity: .20; }
+.aircraft-watermark svg { width: 100%; height: 100%; overflow: visible; }
+.aircraft-watermark .plane-outline { stroke-width: 1.55; opacity: .92; vector-effect: non-scaling-stroke; }
+.aircraft-watermark .plane-outline .major { stroke-width: 2.15; }
+.aircraft-watermark .plane-windows { opacity: .24; }
 .aircraft-watermark .plane-max { display: none; }
 .app-shell[data-aircraft="MAX"] .aircraft-watermark .plane-ng { display: none; }
 .app-shell[data-aircraft="MAX"] .aircraft-watermark .plane-max { display: inline; }

@@ -27,39 +27,74 @@
       <div class="version-badge" id="versionBadge">NG</div>
 
       <div class="aircraft-watermark" aria-hidden="true">
-        <svg viewBox="0 0 1000 260" preserveAspectRatio="xMidYMid meet">
+        <svg viewBox="0 0 1000 250" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <linearGradient id="planeFade" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="currentColor" stop-opacity=".08"/>
+              <stop offset=".18" stop-color="currentColor" stop-opacity=".34"/>
+              <stop offset=".82" stop-color="currentColor" stop-opacity=".34"/>
+              <stop offset="1" stop-color="currentColor" stop-opacity=".08"/>
+            </linearGradient>
+          </defs>
+
           <g class="plane plane-ng">
-            <g class="plane-fill">
-              <path d="M55 137 C73 116 111 105 171 101 C306 92 497 94 707 98 C756 99 799 105 835 116 L918 136 C933 140 933 145 916 149 L837 158 C796 163 751 165 702 164 L174 162 C112 162 72 153 55 140 Z"/>
-              <path d="M414 137 L554 72 L592 74 L505 141 Z"/>
-              <path d="M410 149 L565 210 L605 205 L506 146 Z"/>
-              <path d="M754 104 L816 34 L858 37 L827 111 Z"/>
-              <path d="M780 121 L897 106 L923 112 L835 132 Z"/>
-              <ellipse cx="545" cy="165" rx="48" ry="24"/>
-              <ellipse class="rear-engine" cx="643" cy="161" rx="43" ry="21"/>
+            <g class="plane-outline" fill="none" stroke="url(#planeFade)" stroke-linecap="round" stroke-linejoin="round">
+              <!-- fuselage -->
+              <path class="major" d="M75 135 C95 112 138 103 207 101 L702 101 C752 101 789 106 822 119 L918 137 C932 140 935 146 918 150 L823 158 C784 161 745 162 699 162 L209 162 C143 162 99 154 76 142 C69 139 69 138 75 135 Z"/>
+              <!-- nose/cockpit -->
+              <path d="M87 133 C112 119 142 113 179 111"/>
+              <path d="M126 121 l27 -4 l14 8 l-31 3 Z"/>
+              <path d="M169 116 l24 -2 l8 10 l-25 1 Z"/>
+              <!-- cabin belt -->
+              <path d="M213 119 C350 115 535 115 695 117"/>
+              <path d="M218 145 C363 147 548 147 690 145" opacity=".52"/>
+              <!-- doors -->
+              <path d="M217 113 v35 M690 115 v34" opacity=".65"/>
+              <!-- wing and tailplane -->
+              <path class="major" d="M438 141 L558 69 L589 71 L516 142"/>
+              <path class="major" d="M454 151 L575 207 L607 203 L520 148"/>
+              <path class="major" d="M752 107 L810 37 L845 40 L824 117"/>
+              <path d="M785 124 L885 110 L912 116 L829 136"/>
+              <!-- engine/pylon -->
+              <path d="M520 143 L548 154"/>
+              <path class="major" d="M511 158 C519 145 536 140 559 143 C588 147 604 158 602 171 C600 185 583 193 556 192 C529 191 510 180 508 168 C507 164 508 161 511 158 Z"/>
+              <path d="M522 164 C530 154 543 151 558 153 C577 155 588 163 587 171 C586 180 574 185 557 184 C539 184 526 177 524 170"/>
+              <path d="M603 154 C620 148 642 151 655 160 C665 167 665 176 656 182" opacity=".55"/>
+              <!-- NG blended winglet -->
+              <path class="variant-winglet major" d="M558 69 C562 58 565 48 566 39"/>
+              <!-- small details -->
+              <path d="M735 118 q17 7 31 17" opacity=".55"/>
+              <path d="M96 140 q20 7 45 8" opacity=".55"/>
             </g>
-            <g class="plane-detail" fill="none" stroke="currentColor" stroke-linecap="round">
-              <path d="M83 133 C111 116 145 112 181 112"/>
-              <path d="M197 116 C330 109 506 109 680 111"/>
-              <ellipse cx="545" cy="165" rx="31" ry="15"/>
-              <path class="ng-winglet" d="M554 73 L559 54"/>
+            <g class="plane-windows" fill="currentColor">
+              <circle cx="230" cy="119" r="2.1"/><circle cx="248" cy="119" r="2.1"/><circle cx="266" cy="119" r="2.1"/><circle cx="284" cy="119" r="2.1"/><circle cx="302" cy="119" r="2.1"/><circle cx="320" cy="118.8" r="2.1"/><circle cx="338" cy="118.7" r="2.1"/><circle cx="356" cy="118.6" r="2.1"/><circle cx="374" cy="118.5" r="2.1"/><circle cx="392" cy="118.4" r="2.1"/><circle cx="410" cy="118.3" r="2.1"/><circle cx="428" cy="118.2" r="2.1"/><circle cx="446" cy="118.1" r="2.1"/><circle cx="464" cy="118" r="2.1"/><circle cx="482" cy="118" r="2.1"/><circle cx="500" cy="118" r="2.1"/><circle cx="518" cy="118" r="2.1"/><circle cx="536" cy="118" r="2.1"/><circle cx="554" cy="118" r="2.1"/><circle cx="572" cy="118" r="2.1"/><circle cx="590" cy="118" r="2.1"/><circle cx="608" cy="118" r="2.1"/><circle cx="626" cy="118" r="2.1"/><circle cx="644" cy="118" r="2.1"/><circle cx="662" cy="118" r="2.1"/>
             </g>
           </g>
+
           <g class="plane plane-max">
-            <g class="plane-fill">
-              <path d="M55 137 C73 116 111 105 171 101 C306 92 497 94 707 98 C756 99 799 105 835 116 L918 136 C933 140 933 145 916 149 L837 158 C796 163 751 165 702 164 L174 162 C112 162 72 153 55 140 Z"/>
-              <path d="M414 137 L554 72 L592 74 L505 141 Z"/>
-              <path d="M410 149 L565 210 L605 205 L506 146 Z"/>
-              <path d="M754 104 L816 34 L858 37 L827 111 Z"/>
-              <path d="M780 121 L897 106 L923 112 L835 132 Z"/>
-              <ellipse cx="548" cy="166" rx="52" ry="26"/>
-              <ellipse class="rear-engine" cx="648" cy="162" rx="47" ry="23"/>
+            <g class="plane-outline" fill="none" stroke="url(#planeFade)" stroke-linecap="round" stroke-linejoin="round">
+              <path class="major" d="M75 135 C95 112 138 103 207 101 L702 101 C752 101 789 106 822 119 L918 137 C932 140 935 146 918 150 L823 158 C784 161 745 162 699 162 L209 162 C143 162 99 154 76 142 C69 139 69 138 75 135 Z"/>
+              <path d="M87 133 C112 119 142 113 179 111"/>
+              <path d="M126 121 l27 -4 l14 8 l-31 3 Z"/>
+              <path d="M169 116 l24 -2 l8 10 l-25 1 Z"/>
+              <path d="M213 119 C350 115 535 115 695 117"/>
+              <path d="M218 145 C363 147 548 147 690 145" opacity=".52"/>
+              <path d="M217 113 v35 M690 115 v34" opacity=".65"/>
+              <path class="major" d="M438 141 L558 69 L589 71 L516 142"/>
+              <path class="major" d="M454 151 L575 207 L607 203 L520 148"/>
+              <path class="major" d="M752 107 L810 37 L845 40 L824 117"/>
+              <path d="M785 124 L885 110 L912 116 L829 136"/>
+              <path d="M518 143 L550 155"/>
+              <path class="major" d="M507 158 C515 142 534 136 560 139 C594 142 613 155 612 171 C611 188 591 198 559 197 C527 196 505 183 503 169 C502 165 503 161 507 158 Z"/>
+              <path d="M518 164 C527 152 542 148 560 150 C582 152 596 161 595 171 C594 182 580 188 559 188 C538 187 522 179 520 170"/>
+              <path d="M614 153 C632 147 655 150 669 160 C680 167 680 177 670 184" opacity=".55"/>
+              <!-- MAX split scimitar -->
+              <path class="variant-winglet major" d="M558 69 C562 57 565 47 567 36 M558 69 C552 78 548 87 545 97"/>
+              <path d="M735 118 q17 7 31 17" opacity=".55"/>
+              <path d="M96 140 q20 7 45 8" opacity=".55"/>
             </g>
-            <g class="plane-detail" fill="none" stroke="currentColor" stroke-linecap="round">
-              <path d="M83 133 C111 116 145 112 181 112"/>
-              <path d="M197 116 C330 109 506 109 680 111"/>
-              <ellipse cx="548" cy="166" rx="34" ry="17"/>
-              <path class="max-winglet" d="M554 73 L561 48 M554 73 L544 92"/>
+            <g class="plane-windows" fill="currentColor">
+              <circle cx="230" cy="119" r="2.1"/><circle cx="248" cy="119" r="2.1"/><circle cx="266" cy="119" r="2.1"/><circle cx="284" cy="119" r="2.1"/><circle cx="302" cy="119" r="2.1"/><circle cx="320" cy="118.8" r="2.1"/><circle cx="338" cy="118.7" r="2.1"/><circle cx="356" cy="118.6" r="2.1"/><circle cx="374" cy="118.5" r="2.1"/><circle cx="392" cy="118.4" r="2.1"/><circle cx="410" cy="118.3" r="2.1"/><circle cx="428" cy="118.2" r="2.1"/><circle cx="446" cy="118.1" r="2.1"/><circle cx="464" cy="118" r="2.1"/><circle cx="482" cy="118" r="2.1"/><circle cx="500" cy="118" r="2.1"/><circle cx="518" cy="118" r="2.1"/><circle cx="536" cy="118" r="2.1"/><circle cx="554" cy="118" r="2.1"/><circle cx="572" cy="118" r="2.1"/><circle cx="590" cy="118" r="2.1"/><circle cx="608" cy="118" r="2.1"/><circle cx="626" cy="118" r="2.1"/><circle cx="644" cy="118" r="2.1"/><circle cx="662" cy="118" r="2.1"/>
             </g>
           </g>
         </svg>
