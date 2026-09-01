@@ -13,7 +13,7 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <main class="app-shell" id="appShell">
+  <main class="app-shell" id="appShell" data-aircraft="NG">
     <header class="app-header">
       <button class="icon-button ghost" id="aboutButton" type="button" aria-label="About this calculator">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"></circle><path d="M12 10.5v6"></path><circle cx="12" cy="7.25" r=".75" class="fill"></circle></svg>
@@ -27,15 +27,40 @@
       <div class="version-badge" id="versionBadge">NG</div>
 
       <div class="aircraft-watermark" aria-hidden="true">
-        <svg viewBox="0 0 900 250" preserveAspectRatio="xMidYMid meet">
-          <g fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M72 142 C138 127 211 120 312 117 L552 111 C624 108 682 96 729 72 L780 43 L797 45 L772 95 C807 102 837 112 861 126 C805 136 740 143 675 146 L527 151 C472 153 421 163 368 183 L326 199 L308 197 L343 157 L226 160 C164 161 113 157 72 149 Z"/>
-            <ellipse cx="540" cy="151" rx="39" ry="13"/>
-            <ellipse cx="628" cy="147" rx="38" ry="12"/>
-            <path d="M349 119 L440 72 L463 73 L407 120"/>
-            <path d="M341 156 L426 197 L447 195 L399 154"/>
-            <path d="M124 139 C141 132 153 130 173 130"/>
-            <path d="M724 73 L746 118"/>
+        <svg viewBox="0 0 1000 260" preserveAspectRatio="xMidYMid meet">
+          <g class="plane plane-ng">
+            <g class="plane-fill">
+              <path d="M55 137 C73 116 111 105 171 101 C306 92 497 94 707 98 C756 99 799 105 835 116 L918 136 C933 140 933 145 916 149 L837 158 C796 163 751 165 702 164 L174 162 C112 162 72 153 55 140 Z"/>
+              <path d="M414 137 L554 72 L592 74 L505 141 Z"/>
+              <path d="M410 149 L565 210 L605 205 L506 146 Z"/>
+              <path d="M754 104 L816 34 L858 37 L827 111 Z"/>
+              <path d="M780 121 L897 106 L923 112 L835 132 Z"/>
+              <ellipse cx="545" cy="165" rx="48" ry="24"/>
+              <ellipse class="rear-engine" cx="643" cy="161" rx="43" ry="21"/>
+            </g>
+            <g class="plane-detail" fill="none" stroke="currentColor" stroke-linecap="round">
+              <path d="M83 133 C111 116 145 112 181 112"/>
+              <path d="M197 116 C330 109 506 109 680 111"/>
+              <ellipse cx="545" cy="165" rx="31" ry="15"/>
+              <path class="ng-winglet" d="M554 73 L559 54"/>
+            </g>
+          </g>
+          <g class="plane plane-max">
+            <g class="plane-fill">
+              <path d="M55 137 C73 116 111 105 171 101 C306 92 497 94 707 98 C756 99 799 105 835 116 L918 136 C933 140 933 145 916 149 L837 158 C796 163 751 165 702 164 L174 162 C112 162 72 153 55 140 Z"/>
+              <path d="M414 137 L554 72 L592 74 L505 141 Z"/>
+              <path d="M410 149 L565 210 L605 205 L506 146 Z"/>
+              <path d="M754 104 L816 34 L858 37 L827 111 Z"/>
+              <path d="M780 121 L897 106 L923 112 L835 132 Z"/>
+              <ellipse cx="548" cy="166" rx="52" ry="26"/>
+              <ellipse class="rear-engine" cx="648" cy="162" rx="47" ry="23"/>
+            </g>
+            <g class="plane-detail" fill="none" stroke="currentColor" stroke-linecap="round">
+              <path d="M83 133 C111 116 145 112 181 112"/>
+              <path d="M197 116 C330 109 506 109 680 111"/>
+              <ellipse cx="548" cy="166" rx="34" ry="17"/>
+              <path class="max-winglet" d="M554 73 L561 48 M554 73 L544 92"/>
+            </g>
           </g>
         </svg>
       </div>

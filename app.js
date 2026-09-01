@@ -53,6 +53,7 @@
   function updateAircraftUI() {
     const table = B737_TABLES[state.aircraft];
     refs.version.textContent = state.aircraft;
+    refs.shell.dataset.aircraft = state.aircraft;
     refs.aircraftResult.textContent = table.label;
     refs.source.textContent = `${state.aircraft}: ${table.source}`;
     refs.weight.min = table.axes.weights[0] * 1000;

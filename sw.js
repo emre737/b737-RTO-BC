@@ -1,4 +1,4 @@
-const CACHE = 'b737-rto-v1.0.0';
+const CACHE = 'b737-rto-v1.0.1';
 const ASSETS = [
   './',
   './index.html',
