@@ -26,6 +26,8 @@ assert.equal(r.ok, true); close(r.eventEnergy, 25.6); close(r.correctedSpeed, 12
 // Wind correction checks.
 close(E.correctedSpeed(140,'IAS','HW',20),130);
 close(E.correctedSpeed(140,'IAS','TW',20),170);
+close(E.actualFromCorrected(130,'IAS','HW',20),140);
+close(E.actualFromCorrected(170,'IAS','TW',20),140);
 
 // 4D interpolation at midpoint of a complete NG hypercube.
 // Average of 16 surrounding corners: W 60/70, OAT 10/15, speed 120/140, alt 0/5.
@@ -52,5 +54,24 @@ assert.equal(E.classify(30.0, B737_TABLES.NG), 'CAUTION');
 assert.equal(E.classify(29.9, B737_TABLES.MAX), 'CAUTION');
 assert.equal(E.classify(41.0, B737_TABLES.NG), 'MELT');
 assert.equal(E.classify(41.0, B737_TABLES.MAX), 'MELT');
+
+// Speed profile and threshold guidance.
+let profile = E.buildSpeedProfile({ aircraft:'NG', weightKg:60000, speed:120, speedType:'GS', windType:'HW', windComponent:0, oat:15, pressureAltitudeFt:0, taxiMiles:0 }, { step: 2 });
+assert.equal(profile.ok, true);
+assert.ok(profile.points.length > 10);
+assert.ok(profile.cautionStart);
+assert.ok(profile.meltStart);
+let thresholdResult = E.calculate({ aircraft:'NG', weightKg:60000, speed:profile.cautionStart.actualSpeed, speedType:'GS', windType:'HW', windComponent:0, oat:15, pressureAltitudeFt:0, taxiMiles:0 });
+assert.equal(thresholdResult.ok, true);
+assert.ok(thresholdResult.totalEnergy >= B737_TABLES.NG.thresholds.caution - 0.05);
+assert.ok(thresholdResult.totalEnergy <= B737_TABLES.NG.thresholds.caution + 0.2);
+thresholdResult = E.calculate({ aircraft:'NG', weightKg:60000, speed:profile.meltStart.actualSpeed, speedType:'GS', windType:'HW', windComponent:0, oat:15, pressureAltitudeFt:0, taxiMiles:0 });
+assert.equal(thresholdResult.ok, true);
+assert.ok(thresholdResult.totalEnergy >= B737_TABLES.NG.thresholds.melt - 0.05);
+assert.ok(thresholdResult.totalEnergy <= B737_TABLES.NG.thresholds.melt + 0.2);
+
+profile = E.buildSpeedProfile({ aircraft:'MAX', weightKg:90000, speed:120, speedType:'IAS', windType:'HW', windComponent:0, oat:20, pressureAltitudeFt:5000, taxiMiles:0 }, { step: 2 });
+assert.equal(profile.ok, true);
+assert.ok(profile.invalidRanges.length >= 1);
 
 console.log('All B737 RTO engine tests passed.');

@@ -121,6 +121,37 @@
       </div>
     </section>
 
+
+    <section class="speed-graph-card hidden" id="speedGraphCard" aria-live="polite">
+      <div class="speed-graph-header">
+        <div>
+          <div class="result-kicker">SPEED THRESHOLDS</div>
+          <h3>When do Caution and Melt start?</h3>
+        </div>
+        <div class="legend-row" aria-hidden="true">
+          <span class="legend-item legend-current">Current</span>
+          <span class="legend-item legend-caution">Caution</span>
+          <span class="legend-item legend-melt">Melt</span>
+        </div>
+      </div>
+
+      <div class="threshold-row">
+        <div class="threshold-chip caution">
+          <span class="threshold-chip-label">Caution starts</span>
+          <strong id="cautionSpeedValue">—</strong>
+        </div>
+        <div class="threshold-chip melt">
+          <span class="threshold-chip-label">Melt starts</span>
+          <strong id="meltSpeedValue">—</strong>
+        </div>
+      </div>
+
+      <div class="graph-wrap">
+        <canvas id="speedGraphCanvas" width="640" height="320"></canvas>
+      </div>
+      <p class="graph-note" id="speedGraphNote">Graph appears after a valid calculation.</p>
+    </section>
+
     <footer class="app-footer">
       <div id="sourceText">NG: PI-QRH.31.31 / 31.32 — Mar 30, 2026</div>
       <div>Advisory calculator. Verify with the current company QRH. Other residual brake energy is not estimated.</div>

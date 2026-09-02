@@ -28,3 +28,9 @@ Current automated tests cover QRH grid values, interpolation, IAS wind correctio
 ## UI note
 
 This build replaces the previous silhouette with a blended hero image of a front-view 737 MAX on a wet runway.
+
+
+## New in v1.2.0
+
+- Adds a speed-threshold graph below the main result card.
+- Shows the estimated brakes-on speed where CAUTION starts and where MELT starts for the current conditions.
