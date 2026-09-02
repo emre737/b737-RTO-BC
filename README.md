@@ -40,3 +40,10 @@ This build replaces the previous silhouette with a blended hero image of a front
 
 - Upgrades the speed-threshold chart with a premium visual style.
 - Adds smoothed line rendering, glow effects, shaded caution and melt zones, marker callouts, and sparse-QRH invalid-range shading.
+
+
+## New in v1.4.0
+
+- Removes the chart for a cleaner mobile layout.
+- Keeps Caution and Melt threshold speeds as premium numeric cards.
+- Adds current-speed comparison/margin text for each threshold.

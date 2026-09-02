@@ -122,34 +122,38 @@
     </section>
 
 
-    <section class="speed-graph-card hidden" id="speedGraphCard" aria-live="polite">
-      <div class="speed-graph-header">
+    <section class="speed-threshold-card hidden" id="speedGraphCard" aria-live="polite">
+      <div class="speed-threshold-header">
         <div>
           <div class="result-kicker">SPEED THRESHOLDS</div>
-          <h3>When do Caution and Melt start?</h3>
+          <h3>RTO speed limits at current conditions</h3>
         </div>
-        <div class="legend-row" aria-hidden="true">
-          <span class="legend-item legend-current">Current</span>
-          <span class="legend-item legend-caution">Caution</span>
-          <span class="legend-item legend-melt">Melt</span>
+        <div class="current-speed-pill">
+          <span>CURRENT</span>
+          <strong id="currentSpeedValue">—</strong>
         </div>
       </div>
 
-      <div class="threshold-row">
+      <div class="threshold-row premium-threshold-row">
         <div class="threshold-chip caution">
-          <span class="threshold-chip-label">Caution starts</span>
-          <strong id="cautionSpeedValue">—</strong>
+          <div class="threshold-icon">!</div>
+          <div>
+            <span class="threshold-chip-label">Caution starts</span>
+            <strong id="cautionSpeedValue">—</strong>
+            <small id="cautionDeltaValue">—</small>
+          </div>
         </div>
         <div class="threshold-chip melt">
-          <span class="threshold-chip-label">Melt starts</span>
-          <strong id="meltSpeedValue">—</strong>
+          <div class="threshold-icon">×</div>
+          <div>
+            <span class="threshold-chip-label">Melt starts</span>
+            <strong id="meltSpeedValue">—</strong>
+            <small id="meltDeltaValue">—</small>
+          </div>
         </div>
       </div>
 
-      <div class="graph-wrap">
-        <canvas id="speedGraphCanvas" width="640" height="320"></canvas>
-      </div>
-      <p class="graph-note" id="speedGraphNote">Graph appears after a valid calculation.</p>
+      <div class="threshold-summary" id="thresholdSummary">Calculated from the current QRH inputs.</div>
     </section>
 
     <footer class="app-footer">
