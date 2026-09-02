@@ -382,14 +382,26 @@ button { -webkit-tap-highlight-color: transparent; }
 .hidden { display: none !important; }
 
 .speed-graph-card {
+  position: relative;
   margin-top: 16px;
-  border: 1px solid var(--border-strong);
-  border-radius: 20px;
+  border: 1px solid rgba(148,170,194,.18);
+  border-radius: 22px;
   padding: 16px 16px 14px;
-  background: linear-gradient(180deg, rgba(10, 26, 42, .98), rgba(6, 19, 32, .98));
-  box-shadow: var(--shadow);
+  background:
+    radial-gradient(circle at top right, rgba(73,127,191,.12), transparent 28%),
+    linear-gradient(180deg, rgba(12, 28, 45, .98), rgba(6, 19, 32, .98));
+  box-shadow: 0 18px 50px rgba(0,0,0,.22), inset 0 1px 0 rgba(255,255,255,.04);
+  overflow: hidden;
+}
+.speed-graph-card::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,.035) 0%, rgba(255,255,255,0) 38%);
+  pointer-events: none;
 }
 .speed-graph-header {
+  position: relative;
   display: flex;
   align-items: flex-start;
   justify-content: space-between;
@@ -410,11 +422,12 @@ button { -webkit-tap-highlight-color: transparent; }
 }
 .legend-item {
   position: relative;
-  min-height: 26px;
-  padding: 6px 10px 6px 24px;
+  min-height: 28px;
+  padding: 6px 11px 6px 25px;
   border-radius: 999px;
-  border: 1px solid rgba(148,170,194,.16);
-  background: rgba(9, 22, 36, .66);
+  border: 1px solid rgba(148,170,194,.14);
+  background: linear-gradient(180deg, rgba(14,31,49,.92), rgba(9,22,36,.72));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
   color: var(--muted);
   font-size: 11px;
   font-weight: 700;
@@ -430,6 +443,7 @@ button { -webkit-tap-highlight-color: transparent; }
   border-radius: 50%;
   transform: translateY(-50%);
   background: currentColor;
+  box-shadow: 0 0 12px currentColor;
 }
 .legend-current { color: #63a5ff; }
 .legend-caution { color: var(--amber); }
@@ -441,11 +455,12 @@ button { -webkit-tap-highlight-color: transparent; }
   margin-top: 14px;
 }
 .threshold-chip {
-  min-height: 76px;
-  border: 1px solid rgba(148,170,194,.16);
+  min-height: 80px;
+  border: 1px solid rgba(148,170,194,.14);
   border-radius: 18px;
-  padding: 12px 14px;
-  background: rgba(9, 22, 36, .72);
+  padding: 13px 14px;
+  background: linear-gradient(180deg, rgba(13,28,43,.9), rgba(9,22,36,.72));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -460,7 +475,7 @@ button { -webkit-tap-highlight-color: transparent; }
 .threshold-chip strong {
   display: block;
   margin-top: 7px;
-  font-size: 26px;
+  font-size: 28px;
   line-height: 1;
   font-weight: 760;
   letter-spacing: -.03em;
@@ -468,22 +483,24 @@ button { -webkit-tap-highlight-color: transparent; }
 .threshold-chip.caution strong { color: var(--amber); }
 .threshold-chip.melt strong { color: var(--red); }
 .graph-wrap {
+  position: relative;
   margin-top: 14px;
   border: 1px solid rgba(148,170,194,.12);
   border-radius: 18px;
   overflow: hidden;
   background: linear-gradient(180deg, rgba(10,24,37,.95), rgba(5,15,25,.95));
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.03);
 }
 #speedGraphCanvas {
   width: 100%;
-  height: 290px;
+  height: 310px;
   display: block;
 }
 .graph-note {
   margin: 10px 2px 0;
   color: var(--muted-2);
   font-size: 11px;
-  line-height: 1.4;
+  line-height: 1.45;
 }
 
 @media (max-width: 520px) {
@@ -500,6 +517,6 @@ button { -webkit-tap-highlight-color: transparent; }
     grid-template-columns: 1fr;
   }
   #speedGraphCanvas {
-    height: 250px;
+    height: 270px;
   }
 }

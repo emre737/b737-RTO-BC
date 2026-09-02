@@ -34,3 +34,9 @@ This build replaces the previous silhouette with a blended hero image of a front
 
 - Adds a speed-threshold graph below the main result card.
 - Shows the estimated brakes-on speed where CAUTION starts and where MELT starts for the current conditions.
+
+
+## New in v1.3.0
+
+- Upgrades the speed-threshold chart with a premium visual style.
+- Adds smoothed line rendering, glow effects, shaded caution and melt zones, marker callouts, and sparse-QRH invalid-range shading.

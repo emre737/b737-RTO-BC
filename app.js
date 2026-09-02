@@ -202,6 +202,55 @@
     return step * power;
   }
 
+  function roundedRectPath(ctx, x, y, w, h, r) {
+    const radius = Math.min(r, w / 2, h / 2);
+    ctx.beginPath();
+    ctx.moveTo(x + radius, y);
+    ctx.arcTo(x + w, y, x + w, y + h, radius);
+    ctx.arcTo(x + w, y + h, x, y + h, radius);
+    ctx.arcTo(x, y + h, x, y, radius);
+    ctx.arcTo(x, y, x + w, y, radius);
+    ctx.closePath();
+  }
+
+  function drawPill(ctx, x, y, text, options) {
+    const paddingX = options.paddingX || 10;
+    const paddingY = options.paddingY || 7;
+    ctx.save();
+    ctx.font = options.font || '700 11px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif';
+    const width = ctx.measureText(text).width + paddingX * 2;
+    const height = (options.height || 26);
+    roundedRectPath(ctx, x, y, width, height, height / 2);
+    ctx.fillStyle = options.fill || 'rgba(8, 21, 34, 0.88)';
+    ctx.fill();
+    if (options.stroke) {
+      ctx.strokeStyle = options.stroke;
+      ctx.lineWidth = options.lineWidth || 1;
+      ctx.stroke();
+    }
+    ctx.fillStyle = options.textColor || '#f5f8fb';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillText(text, x + paddingX, y + height / 2 + 0.5);
+    ctx.restore();
+    return { width, height };
+  }
+
+  function buildSmoothLinePath(ctx, coordinates) {
+    if (!coordinates.length) return;
+    ctx.beginPath();
+    ctx.moveTo(coordinates[0].x, coordinates[0].y);
+    for (let i = 0; i < coordinates.length - 1; i += 1) {
+      const current = coordinates[i];
+      const next = coordinates[i + 1];
+      const midX = (current.x + next.x) / 2;
+      const midY = (current.y + next.y) / 2;
+      ctx.quadraticCurveTo(current.x, current.y, midX, midY);
+    }
+    const last = coordinates[coordinates.length - 1];
+    ctx.lineTo(last.x, last.y);
+  }
+
   function drawSpeedGraph(profile, result) {
     const canvas = refs.graphCanvas;
     const cssWidth = canvas.clientWidth || 640;
@@ -214,14 +263,14 @@
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     ctx.clearRect(0, 0, cssWidth, cssHeight);
 
-    const pad = { top: 18, right: 16, bottom: 32, left: 50 };
+    const pad = { top: 18, right: 18, bottom: 34, left: 54 };
     const plotWidth = cssWidth - pad.left - pad.right;
     const plotHeight = cssHeight - pad.top - pad.bottom;
 
     const xMin = profile.minActualSpeed;
     const xMax = profile.maxActualSpeed;
     const thresholdMax = Math.max(result.thresholds.melt, result.thresholds.caution);
-    const yMax = niceStep(Math.max(profile.maxEnergy, thresholdMax) * 1.08, 5);
+    const yMax = niceStep(Math.max(profile.maxEnergy, thresholdMax) * 1.12, 5);
     const yMin = 0;
 
     function xScale(value) {
@@ -231,20 +280,51 @@
       return pad.top + plotHeight - ((value - yMin) / (yMax - yMin || 1)) * plotHeight;
     }
 
-    ctx.fillStyle = 'rgba(255,255,255,0.02)';
+    // Background panel inside canvas
+    const background = ctx.createLinearGradient(0, 0, 0, cssHeight);
+    background.addColorStop(0, 'rgba(13, 31, 50, 0.98)');
+    background.addColorStop(1, 'rgba(6, 17, 29, 0.98)');
+    ctx.fillStyle = background;
+    roundedRectPath(ctx, 0.5, 0.5, cssWidth - 1, cssHeight - 1, 16);
+    ctx.fill();
+
+    const plotGradient = ctx.createLinearGradient(0, pad.top, 0, pad.top + plotHeight);
+    plotGradient.addColorStop(0, 'rgba(23, 54, 84, 0.18)');
+    plotGradient.addColorStop(1, 'rgba(7, 16, 25, 0.02)');
+    ctx.fillStyle = plotGradient;
     ctx.fillRect(pad.left, pad.top, plotWidth, plotHeight);
 
-    // Threshold bands
+    // Invalid speed ranges from sparse QRH areas.
+    profile.invalidRanges.forEach((range) => {
+      const start = B737Engine.actualFromCorrected(range.from, profile.speedType, profile.windType, profile.windComponent);
+      const end = B737Engine.actualFromCorrected(range.to, profile.speedType, profile.windType, profile.windComponent);
+      const from = xScale(Math.max(xMin, Math.min(start, end)));
+      const to = xScale(Math.min(xMax, Math.max(start, end)));
+      const width = Math.max(2, to - from);
+      ctx.save();
+      ctx.fillStyle = 'rgba(255,255,255,0.03)';
+      ctx.fillRect(from, pad.top, width, plotHeight);
+      ctx.strokeStyle = 'rgba(255,255,255,0.06)';
+      ctx.lineWidth = 1;
+      for (let x = from - plotHeight; x < to; x += 12) {
+        ctx.beginPath();
+        ctx.moveTo(x, pad.top + plotHeight);
+        ctx.lineTo(x + plotHeight, pad.top);
+        ctx.stroke();
+      }
+      ctx.restore();
+    });
+
     const cautionY = yScale(result.thresholds.caution);
     const meltY = yScale(result.thresholds.melt);
+
+    // Zone fills
     ctx.fillStyle = 'rgba(245,172,57,0.08)';
     ctx.fillRect(pad.left, meltY, plotWidth, cautionY - meltY);
-    ctx.fillStyle = 'rgba(255,87,87,0.08)';
+    ctx.fillStyle = 'rgba(255,87,87,0.10)';
     ctx.fillRect(pad.left, pad.top, plotWidth, meltY - pad.top);
 
-    // Gridlines
-    ctx.strokeStyle = 'rgba(148,170,194,0.14)';
-    ctx.lineWidth = 1;
+    // Gridlines and ticks
     ctx.font = '11px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif';
     ctx.fillStyle = 'rgba(145,165,189,0.88)';
 
@@ -254,12 +334,15 @@
       ctx.beginPath();
       ctx.moveTo(pad.left, py);
       ctx.lineTo(pad.left + plotWidth, py);
+      ctx.strokeStyle = y === 0 ? 'rgba(148,170,194,0.22)' : 'rgba(148,170,194,0.12)';
+      ctx.lineWidth = 1;
       ctx.stroke();
-      ctx.fillText(String(Number(y.toFixed(1))), 8, py + 4);
+      ctx.fillText(String(Number(y.toFixed(1))), 10, py + 4);
     }
 
-    const xTickCount = Math.min(6, Math.max(4, Math.round(plotWidth / 80)));
+    const xTickCount = Math.min(6, Math.max(4, Math.round(plotWidth / 82)));
     const xStep = (xMax - xMin) / (xTickCount - 1 || 1);
+    ctx.textAlign = 'center';
     for (let i = 0; i < xTickCount; i += 1) {
       const value = xMin + xStep * i;
       const px = xScale(value);
@@ -267,17 +350,17 @@
       ctx.moveTo(px, pad.top);
       ctx.lineTo(px, pad.top + plotHeight);
       ctx.strokeStyle = 'rgba(148,170,194,0.08)';
+      ctx.lineWidth = 1;
       ctx.stroke();
       ctx.fillStyle = 'rgba(145,165,189,0.88)';
-      ctx.textAlign = 'center';
       ctx.fillText(value.toFixed(Math.abs(value - Math.round(value)) < 0.05 ? 0 : 1), px, cssHeight - 10);
     }
-    ctx.textAlign = 'start';
+    ctx.textAlign = 'left';
 
-    // Threshold lines
-    function drawDashedLine(y, color, label) {
+    // Threshold lines with pills
+    function drawThresholdLine(y, color, label, side) {
       ctx.save();
-      ctx.setLineDash([6, 5]);
+      ctx.setLineDash([6, 6]);
       ctx.strokeStyle = color;
       ctx.lineWidth = 1.5;
       ctx.beginPath();
@@ -285,83 +368,153 @@
       ctx.lineTo(pad.left + plotWidth, y);
       ctx.stroke();
       ctx.restore();
-      ctx.fillStyle = color;
-      ctx.font = '700 11px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif';
-      ctx.fillText(label, pad.left + 6, Math.max(pad.top + 12, y - 6));
+      const pillX = side === 'right' ? pad.left + plotWidth - 126 : pad.left + 8;
+      drawPill(ctx, pillX, Math.max(pad.top + 4, y - 12), label, {
+        fill: 'rgba(8,21,34,0.88)',
+        stroke: color,
+        textColor: color,
+        height: 24,
+        paddingX: 9,
+        font: '700 10px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif'
+      });
     }
-    drawDashedLine(cautionY, '#f5ac39', `Caution ${result.thresholds.caution.toFixed(1)} M`);
-    drawDashedLine(meltY, '#ff5757', `Melt ${result.thresholds.melt.toFixed(1)} M`);
+    drawThresholdLine(cautionY, '#f5ac39', `CAUTION ${result.thresholds.caution.toFixed(1)} M`, 'left');
+    drawThresholdLine(meltY, '#ff6c6c', `MELT ${result.thresholds.melt.toFixed(1)} M`, 'right');
 
-    // Curve fill + stroke
-    const points = profile.points;
-    ctx.beginPath();
-    points.forEach((point, index) => {
-      const x = xScale(point.actualSpeed);
-      const y = yScale(point.totalEnergy);
-      if (index === 0) ctx.moveTo(x, y);
-      else ctx.lineTo(x, y);
-    });
-    ctx.lineWidth = 2.75;
-    ctx.strokeStyle = '#63a5ff';
-    ctx.stroke();
+    const coordinates = profile.points.map((point) => ({ x: xScale(point.actualSpeed), y: yScale(point.totalEnergy) }));
 
+    // Curve area fill
+    ctx.save();
     ctx.beginPath();
-    points.forEach((point, index) => {
-      const x = xScale(point.actualSpeed);
-      const y = yScale(point.totalEnergy);
-      if (index === 0) ctx.moveTo(x, cssHeight - pad.bottom);
-      ctx.lineTo(x, y);
-    });
-    const lastPoint = points[points.length - 1];
-    ctx.lineTo(xScale(lastPoint.actualSpeed), cssHeight - pad.bottom);
+    ctx.moveTo(coordinates[0].x, pad.top + plotHeight);
+    for (let i = 0; i < coordinates.length - 1; i += 1) {
+      const current = coordinates[i];
+      const next = coordinates[i + 1];
+      const midX = (current.x + next.x) / 2;
+      const midY = (current.y + next.y) / 2;
+      ctx.quadraticCurveTo(current.x, current.y, midX, midY);
+    }
+    const last = coordinates[coordinates.length - 1];
+    ctx.lineTo(last.x, last.y);
+    ctx.lineTo(last.x, pad.top + plotHeight);
     ctx.closePath();
-    const fill = ctx.createLinearGradient(0, pad.top, 0, cssHeight - pad.bottom);
-    fill.addColorStop(0, 'rgba(99,165,255,0.28)');
+    const fill = ctx.createLinearGradient(0, pad.top, 0, pad.top + plotHeight);
+    fill.addColorStop(0, 'rgba(99,165,255,0.25)');
+    fill.addColorStop(0.6, 'rgba(99,165,255,0.09)');
     fill.addColorStop(1, 'rgba(99,165,255,0.02)');
     ctx.fillStyle = fill;
     ctx.fill();
+    ctx.restore();
 
-    // Markers
-    function drawMarker(speedValue, energyValue, color, label) {
+    // Glow stroke
+    buildSmoothLinePath(ctx, coordinates);
+    ctx.strokeStyle = 'rgba(99,165,255,0.22)';
+    ctx.lineWidth = 9;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.stroke();
+
+    // Main stroke gradient
+    const lineGradient = ctx.createLinearGradient(pad.left, pad.top, pad.left + plotWidth, pad.top + plotHeight);
+    lineGradient.addColorStop(0, '#8fc1ff');
+    lineGradient.addColorStop(0.5, '#5fa4ff');
+    lineGradient.addColorStop(1, '#2f77d0');
+    buildSmoothLinePath(ctx, coordinates);
+    ctx.strokeStyle = lineGradient;
+    ctx.lineWidth = 3.2;
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    ctx.stroke();
+
+    // Current vertical highlight
+    const currentX = xScale(result.speed);
+    const currentY = yScale(result.totalEnergy);
+    const verticalFade = ctx.createLinearGradient(0, pad.top, 0, pad.top + plotHeight);
+    verticalFade.addColorStop(0, 'rgba(99,165,255,0.0)');
+    verticalFade.addColorStop(0.15, 'rgba(99,165,255,0.18)');
+    verticalFade.addColorStop(0.85, 'rgba(99,165,255,0.18)');
+    verticalFade.addColorStop(1, 'rgba(99,165,255,0.0)');
+    ctx.save();
+    ctx.setLineDash([4, 4]);
+    ctx.strokeStyle = verticalFade;
+    ctx.lineWidth = 1.2;
+    ctx.beginPath();
+    ctx.moveTo(currentX, pad.top);
+    ctx.lineTo(currentX, pad.top + plotHeight);
+    ctx.stroke();
+    ctx.restore();
+
+    function drawMarker(speedValue, energyValue, color, label, valueText, preferLeft) {
       if (!Number.isFinite(speedValue) || !Number.isFinite(energyValue)) return;
       const x = xScale(speedValue);
       const y = yScale(energyValue);
+
       ctx.save();
-      ctx.setLineDash([4, 4]);
-      ctx.strokeStyle = color;
-      ctx.lineWidth = 1.2;
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 18;
       ctx.beginPath();
-      ctx.moveTo(x, pad.top);
-      ctx.lineTo(x, pad.top + plotHeight);
-      ctx.stroke();
+      ctx.arc(x, y, 5.5, 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.fill();
       ctx.restore();
+
       ctx.beginPath();
-      ctx.arc(x, y, 4.5, 0, Math.PI * 2);
+      ctx.arc(x, y, 5.5, 0, Math.PI * 2);
       ctx.fillStyle = color;
       ctx.fill();
       ctx.lineWidth = 2;
-      ctx.strokeStyle = 'rgba(6,17,30,0.95)';
+      ctx.strokeStyle = 'rgba(5,15,25,0.95)';
       ctx.stroke();
-      ctx.fillStyle = color;
+
+      ctx.beginPath();
+      ctx.arc(x, y, 11, 0, Math.PI * 2);
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      const pillText = `${label}  ${valueText}`;
       ctx.font = '700 11px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif';
-      ctx.fillText(label, Math.min(pad.left + plotWidth - 90, x + 8), Math.max(pad.top + 12, y - 10));
+      const width = ctx.measureText(pillText).width + 18;
+      let pillX = preferLeft ? x - width - 12 : x + 12;
+      if (pillX + width > pad.left + plotWidth) pillX = x - width - 12;
+      if (pillX < pad.left + 4) pillX = x + 12;
+      const pillY = Math.max(pad.top + 6, Math.min(pad.top + plotHeight - 30, y - 30));
+      drawPill(ctx, pillX, pillY, pillText, {
+        fill: 'rgba(8,21,34,0.92)',
+        stroke: color,
+        textColor: '#f5f8fb',
+        height: 26,
+        paddingX: 10,
+        font: '700 11px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif'
+      });
     }
 
-    drawMarker(result.speed, result.totalEnergy, '#63a5ff', 'Current');
-    if (profile.cautionStart) drawMarker(profile.cautionStart.actualSpeed, result.thresholds.caution, '#f5ac39', 'Caution start');
-    if (profile.meltStart) drawMarker(profile.meltStart.actualSpeed, result.thresholds.melt, '#ff5757', 'Melt start');
+    drawMarker(result.speed, result.totalEnergy, '#63a5ff', 'Current', `${formatSpeed(result.speed).replace(' kt', '')} kt`, false);
+    if (profile.cautionStart) {
+      drawMarker(profile.cautionStart.actualSpeed, result.thresholds.caution, '#f5ac39', 'Caution', `${formatSpeed(profile.cautionStart.actualSpeed).replace(' kt', '')} kt`, true);
+    }
+    if (profile.meltStart) {
+      drawMarker(profile.meltStart.actualSpeed, result.thresholds.melt, '#ff6c6c', 'Melt', `${formatSpeed(profile.meltStart.actualSpeed).replace(' kt', '')} kt`, false);
+    }
 
-    // Axes borders
+    // Plot border and subtle gloss
     ctx.strokeStyle = 'rgba(148,170,194,0.18)';
     ctx.lineWidth = 1;
     ctx.strokeRect(pad.left, pad.top, plotWidth, plotHeight);
 
-    ctx.fillStyle = 'rgba(145,165,189,0.88)';
+    const gloss = ctx.createLinearGradient(0, pad.top, 0, pad.top + 50);
+    gloss.addColorStop(0, 'rgba(255,255,255,0.045)');
+    gloss.addColorStop(1, 'rgba(255,255,255,0)');
+    ctx.fillStyle = gloss;
+    ctx.fillRect(pad.left + 1, pad.top + 1, plotWidth - 2, 36);
+
+    // Axis labels
+    ctx.fillStyle = 'rgba(145,165,189,0.92)';
     ctx.font = '11px -apple-system, BlinkMacSystemFont, "SF Pro Text", sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText(`Brakes-on speed (${result.speedType})`, pad.left + plotWidth / 2, cssHeight - 4);
     ctx.save();
-    ctx.translate(13, pad.top + plotHeight / 2);
+    ctx.translate(14, pad.top + plotHeight / 2);
     ctx.rotate(-Math.PI / 2);
     ctx.textAlign = 'center';
     ctx.fillText('Total brake energy (M ft-lb / brake)', 0, 0);
@@ -369,6 +522,7 @@
   }
 
   function calculate() {
+
     const payload = getInputPayload();
     const result = B737Engine.calculate(payload);
 
