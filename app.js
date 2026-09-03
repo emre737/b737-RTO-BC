@@ -241,6 +241,11 @@
   updateSpeedMode();
 
   if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {}));
+    window.addEventListener('load', async () => {
+      try {
+        const registration = await navigator.serviceWorker.register('./sw.js?v=1.4.1');
+        registration.update().catch(() => {});
+      } catch (_) {}
+    });
   }
 })();

@@ -74,6 +74,14 @@ button { -webkit-tap-highlight-color: transparent; }
   line-height: 1.05;
   letter-spacing: -.03em;
 }
+.build-version {
+  margin-top: 5px;
+  color: rgba(145,165,189,.72);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .13em;
+  text-transform: uppercase;
+}
 
 .icon-button {
   width: 38px;

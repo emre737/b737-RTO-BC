@@ -47,3 +47,10 @@ This build replaces the previous silhouette with a blended hero image of a front
 - Removes the chart for a cleaner mobile layout.
 - Keeps Caution and Melt threshold speeds as premium numeric cards.
 - Adds current-speed comparison/margin text for each threshold.
+
+
+## v1.4.1
+
+- Adds a tiny visible build number under the RTO Calculator title.
+- Keeps the numeric-only Caution/Melt speed threshold card (no chart).
+- Uses network-first service-worker behavior plus versioned asset URLs to reduce stale GitHub Pages/PWA caching after updates.
